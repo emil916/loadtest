@@ -27,6 +27,7 @@ const options = stdio.getopt({
 	headers: {key: 'H', multiple: true, description: 'Send a header as header:value'},
 	postBody: {key: 'P', args: 1, description: 'Send string as POST body'},
 	postFile: {key: 'p', args: 1, description: 'Send the contents of the file as POST body'},
+	postFileBinary: {key: 'b', args: 1, description: 'Send the contents of the binary file as POST body'},
 	patchBody: {key: 'A', args: 1, description: 'Send string as PATCH body'},
 	patchFile: {key: 'a', args: 1, description: 'Send the contents of the file as PATCH body'},
 	data: {args: 1, description: 'Send data POST body'},
@@ -37,7 +38,7 @@ const options = stdio.getopt({
 	secureProtocol: {key: 's', args: 1, description: 'TLS/SSL secure protocol method to use'},
 	keepalive: {key: 'k', description: 'Use a keep-alive http agent'},
 	version: {key: 'V', description: 'Show version number and exit'},
-	proxy: {args: 1, description: 'Use a proxy for requests e.g. http://localhost:8080 '},	
+	proxy: {args: 1, description: 'Use a proxy for requests e.g. http://localhost:8080 '},
 	rps: {args: 1, description: 'Specify the requests per second for each client'},
 	agent: {description: 'Use a keep-alive http agent (deprecated)'},
 	index: {args: 1, description: 'Replace the value of given arg with an index in the URL'},
@@ -76,6 +77,10 @@ if (options.postBody) {
 if (options.postFile) {
 	options.method = 'POST';
 	options.body = readBody(options.postFile, '-p');
+}
+if (options.postFileBinary) {
+	options.method = 'POST';
+	options.body = readBody(options.postFileBinary, '-b');
 }
 if (options.data) {
 	options.body = JSON.parse(options.data);
@@ -184,7 +189,12 @@ function readBody(filename, option) {
 		return require(path.resolve(filename));
 	}
 
-	const ret = fs.readFileSync(filename, {encoding: 'utf8'}).replace("\n", "");
+	let ret;
+	if (option == '-b') {
+		ret = fs.readFileSync(filename);
+	} else {
+		ret = fs.readFileSync(filename, {encoding: 'utf8'}).replace("\n", "");
+	}
 
 	return ret;
 }
