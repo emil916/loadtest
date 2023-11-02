@@ -1,3 +1,8 @@
+Added two new features to the existing tool:
+- Send a BINARY file with POST (use -b option)
+- Specify the directory for RANDOM binary files for each request (use -B option)
+
+
 [![Build Status](https://secure.travis-ci.org/alexfernandez/loadtest.svg)](http://travis-ci.org/alexfernandez/loadtest)
 [![run on repl.it](http://repl.it/badge/github/alexfernandez/loadtest)](https://repl.it/github/alexfernandez/loadtest)
 
