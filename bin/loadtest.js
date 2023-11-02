@@ -28,6 +28,7 @@ const options = stdio.getopt({
 	postBody: {key: 'P', args: 1, description: 'Send string as POST body'},
 	postFile: {key: 'p', args: 1, description: 'Send the contents of the file as POST body'},
 	postFileBinary: {key: 'b', args: 1, description: 'Send the contents of the binary file as POST body'},
+	postFileRandom: {key: 'B', args: 1, description: 'Specify the directory for random binary files for each request'},
 	patchBody: {key: 'A', args: 1, description: 'Send string as PATCH body'},
 	patchFile: {key: 'a', args: 1, description: 'Send the contents of the file as PATCH body'},
 	data: {args: 1, description: 'Send data POST body'},
@@ -81,6 +82,12 @@ if (options.postFile) {
 if (options.postFileBinary) {
 	options.method = 'POST';
 	options.body = readBody(options.postFileBinary, '-b');
+	if (!options.contentType) options.contentType = 'application/octet-stream';
+}
+if (options.postFileRandom) {
+	options.method = 'POST';
+	options.body = () => getRandomFile(options.postFileRandom);
+	if (!options.contentType) options.contentType = 'application/octet-stream';
 }
 if (options.data) {
 	options.body = JSON.parse(options.data);
@@ -197,6 +204,15 @@ function readBody(filename, option) {
 	}
 
 	return ret;
+}
+
+function getRandomFile(dirname) {
+	const files = fs.readdirSync(dirname);
+	const randomIndex = Math.floor(Math.random() * files.length);
+	const randomFileName = files[randomIndex];
+	console.info('File: %s', randomFileName);
+	const filePath = path.join(dirname, randomFileName);
+	return fs.readFileSync(filePath);
 }
 
 /**
