@@ -210,7 +210,7 @@ function getRandomFile(dirname) {
 	const files = fs.readdirSync(dirname);
 	const randomIndex = Math.floor(Math.random() * files.length);
 	const randomFileName = files[randomIndex];
-	console.info('File: %s', randomFileName);
+	// console.info('File: %s', randomFileName);
 	const filePath = path.join(dirname, randomFileName);
 	return fs.readFileSync(filePath);
 }
