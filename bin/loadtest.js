@@ -123,6 +123,12 @@ if(!options.body) {
 	}
 }
 options.requestsPerSecond = options.rps ? parseFloat(options.rps) : configuration.requestsPerSecond;
+
+if (options.poisson && !options.requestsPerSecond) {
+	console.error('Poisson distribution requires "rps" to be set');
+	help();
+}
+
 if(!options.key) {
 	options.key = configuration.key;
 }
