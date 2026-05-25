@@ -42,7 +42,7 @@ const options = stdio.getopt({
 	version: {key: 'V', description: 'Show version number and exit'},
 	proxy: {args: 1, description: 'Use a proxy for requests e.g. http://localhost:8080 '},
 	rps: {args: 1, description: 'Specify the requests per second for each client'},
-	poisson: {description: 'Use a Poisson distribution for request intervals'},
+	poisson_burstiness: {args: 1, description: 'Use a Poisson distribution for request intervals, minimum burstiness value 1'},
 	agent: {description: 'Use a keep-alive http agent (deprecated)'},
 	index: {args: 1, description: 'Replace the value of given arg with an index in the URL'},
 	quiet: {description: 'Do not log any messages'},
@@ -124,7 +124,7 @@ if(!options.body) {
 }
 options.requestsPerSecond = options.rps ? parseFloat(options.rps) : configuration.requestsPerSecond;
 
-if (options.poisson && !options.requestsPerSecond) {
+if (options.poisson_burstiness && !options.requestsPerSecond) {
 	console.error('Poisson distribution requires "rps" to be set');
 	help();
 }
